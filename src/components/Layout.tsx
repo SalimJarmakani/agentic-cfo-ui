@@ -1,13 +1,16 @@
-import { Outlet } from 'react-router';
-import Sidebar from './Sidebar';
+import { Outlet, useLocation } from 'react-router';
+import Navbar from './Navbar';
 import './Layout.css';
 
 export default function Layout() {
+  const location = useLocation();
   return (
     <div className="layout">
-      <Sidebar />
+      <Navbar />
       <main className="layout-main">
-        <Outlet />
+        <div key={location.pathname} className="page-transition">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

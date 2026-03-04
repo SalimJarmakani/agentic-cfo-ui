@@ -1,6 +1,12 @@
 import StatCard from '../components/StatCard';
 import './Page.css';
 
+function AgentIcon({ status }: { status: string }) {
+  if (status === 'done') return <span className="agent-step-check">✓</span>;
+  if (status === 'running') return <span className="agent-step-spinner">↻</span>;
+  return <span className="agent-step-dot" />;
+}
+
 const agentSteps = [
   { label: 'Analysis Agent', status: 'done' },
   { label: 'Planning Agent', status: 'done' },
@@ -34,7 +40,7 @@ export default function Dashboard() {
           {agentSteps.map((step, i) => (
             <div key={step.label} className="agent-pipeline-step">
               <div className={`agent-step ${statusClass[step.status]}`}>
-                <span className="agent-step-dot" />
+                <AgentIcon status={step.status} />
                 <span className="agent-step-label">{step.label}</span>
                 <span className="agent-step-status">{step.status}</span>
               </div>

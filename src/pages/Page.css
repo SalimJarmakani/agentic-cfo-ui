@@ -77,6 +77,28 @@
   flex-shrink: 0;
 }
 
+.agent-step-check {
+  font-size: 14px;
+  font-weight: 700;
+  color: #16a34a;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.agent-step-spinner {
+  display: inline-block;
+  font-size: 16px;
+  color: #3b82f6;
+  line-height: 1;
+  flex-shrink: 0;
+  animation: spin 1s linear infinite;
+}
+
 .agent-step--done   { border-color: #bbf7d0; background: #f0fdf4; }
 .agent-step--done .agent-step-dot { background: #22c55e; }
 .agent-step--running { border-color: #bfdbfe; background: #eff6ff; }
