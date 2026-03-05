@@ -1,84 +1,103 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchUsers, type PaginatedUsersResponse } from '../services/api';
 import './Page.css';
 
-const MOCK_USERS = [
-  { id: 'USR-001', name: 'Alice Johnson', email: 'alice@company.com', department: 'Engineering', role: 'Admin' },
-  { id: 'USR-002', name: 'Bob Martinez', email: 'bob@company.com', department: 'Finance', role: 'Analyst' },
-  { id: 'USR-003', name: 'Carol Lee', email: 'carol@company.com', department: 'Operations', role: 'Viewer' },
-  { id: 'USR-004', name: 'David Kim', email: 'david@company.com', department: 'HR', role: 'Viewer' },
-  { id: 'USR-005', name: 'Eva Chen', email: 'eva@company.com', department: 'Finance', role: 'Analyst' },
-  { id: 'USR-006', name: 'Frank Nguyen', email: 'frank@company.com', department: 'Engineering', role: 'Viewer' },
-  { id: 'USR-007', name: 'Grace Park', email: 'grace@company.com', department: 'Legal', role: 'Analyst' },
-  { id: 'USR-008', name: 'Henry Wu', email: 'henry@company.com', department: 'Finance', role: 'Admin' },
-  { id: 'USR-009', name: 'Iris Patel', email: 'iris@company.com', department: 'HR', role: 'Viewer' },
-  { id: 'USR-010', name: 'James Obi', email: 'james@company.com', department: 'Operations', role: 'Analyst' },
-  { id: 'USR-011', name: 'Karen Flores', email: 'karen@company.com', department: 'Engineering', role: 'Viewer' },
-  { id: 'USR-012', name: 'Leo Santos', email: 'leo@company.com', department: 'Finance', role: 'Viewer' },
-];
-
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 25;
 
 export default function Users() {
   const [page, setPage] = useState(1);
+  const [data, setData] = useState<PaginatedUsersResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalPages = Math.ceil(MOCK_USERS.length / PAGE_SIZE);
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    fetchUsers(page, PAGE_SIZE)
+      .then(setData)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [page]);
+
+  const totalPages = data ? Math.ceil(data.total / PAGE_SIZE) : 1;
   const start = (page - 1) * PAGE_SIZE;
-  const pageRows = MOCK_USERS.slice(start, start + PAGE_SIZE);
 
   return (
     <div className="page">
       <h1 className="page-title">Users</h1>
       <p className="page-sub">All registered users in the system.</p>
 
+      {error && <p style={{ color: '#ef4444', marginBottom: '1rem' }}>{error}</p>}
+
       <div className="card" style={{ padding: 0 }}>
         <table className="data-table">
           <thead>
             <tr>
               <th>User ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Department</th>
-              <th>Role</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Credit Score</th>
+              <th>Yearly Income</th>
+              <th>Total Debt</th>
+              <th>Cards</th>
             </tr>
           </thead>
           <tbody>
-            {pageRows.map((user) => (
-              <tr key={user.id}>
-                <td style={{ fontFamily: 'monospace', color: '#6366f1' }}>{user.id}</td>
-                <td>{user.name}</td>
-                <td style={{ color: '#64748b' }}>{user.email}</td>
-                <td>{user.department}</td>
-                <td>{user.role}</td>
+            {loading ? (
+              <tr>
+                <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>
+                  Loading…
+                </td>
               </tr>
-            ))}
+            ) : (
+              (data?.items ?? []).map((user) => (
+                <tr key={user.user_id}>
+                  <td style={{ fontFamily: 'monospace', color: '#6366f1' }}>{user.user_id}</td>
+                  <td>{user.current_age}</td>
+                  <td>{user.gender}</td>
+                  <td>{user.credit_score}</td>
+                  <td>${user.yearly_income.toLocaleString()}</td>
+                  <td>${user.total_debt.toLocaleString()}</td>
+                  <td>{user.num_credit_cards}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
         <div className="pagination">
           <span className="pagination-info">
-            {start + 1}–{Math.min(start + PAGE_SIZE, MOCK_USERS.length)} of {MOCK_USERS.length} users
+            {data
+              ? `${start + 1}–${Math.min(start + PAGE_SIZE, data.total)} of ${data.total.toLocaleString()} users`
+              : '—'}
           </span>
           <div className="pagination-controls">
             <button
               className="pagination-btn"
               onClick={() => setPage((p) => p - 1)}
-              disabled={page === 1}
+              disabled={page === 1 || loading}
             >
               ‹ Prev
             </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                className={'pagination-btn' + (p === page ? ' pagination-btn--active' : '')}
-                onClick={() => setPage(p)}
-              >
-                {p}
-              </button>
-            ))}
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+              const start = Math.max(1, page - 2);
+              return start + i;
+            })
+              .filter((p) => p <= totalPages)
+              .map((p) => (
+                <button
+                  key={p}
+                  className={'pagination-btn' + (p === page ? ' pagination-btn--active' : '')}
+                  onClick={() => setPage(p)}
+                  disabled={loading}
+                >
+                  {p}
+                </button>
+              ))}
             <button
               className="pagination-btn"
               onClick={() => setPage((p) => p + 1)}
-              disabled={page === totalPages}
+              disabled={page === totalPages || loading}
             >
               Next ›
             </button>
