@@ -2,15 +2,15 @@ export interface SpendingCategory {
   category: string;
   amount: number;
   percentage: number;
-  transactionCount: number;
+  transaction_count: number;
 }
 
 export interface SpendingSummary {
-  userId: string;
-  totalSpend: number;
+  user_id: number;
+  total_spend: number;
   period: string;
   categories: SpendingCategory[];
-  recurringPayments: number;
+  recurring_payments: number;
   subscriptions: number;
 }
 
@@ -18,7 +18,7 @@ export interface OptimizationSuggestion {
   id: string;
   title: string;
   description: string;
-  estimatedSavings: number;
+  estimated_savings: number;
   category: string;
   priority: 'high' | 'medium' | 'low';
 }
@@ -32,8 +32,8 @@ export interface PolicyRule {
 }
 
 export interface PolicyCompliance {
-  userId: string;
-  overallStatus: 'compliant' | 'warning' | 'violation';
+  user_id: number;
+  overall_status: 'compliant' | 'warning' | 'violation';
   score: number;
   rules: PolicyRule[];
 }
