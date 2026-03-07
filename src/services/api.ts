@@ -34,25 +34,26 @@ export async function fetchUsers(page = 1, pageSize = 25): Promise<PaginatedUser
 }
 
 // -- Spending Summary --
-
-export async function fetchSpendingSummary(userId: string): Promise<SpendingSummary> {
-  const res = await fetch(`${BASE_URL}/summary/${userId}`);
+// previous: fetch(`${BASE_URL}/summary/${userId}`)
+export async function fetchSpendingSummary(userId: number): Promise<SpendingSummary> {
+  const res = await fetch(`${BASE_URL}/api/v1/graph/users/${userId}/spending`);
   if (!res.ok) throw new Error('Failed to fetch spending summary');
   return res.json();
 }
 
 // -- Optimization Suggestions --
-
-export async function fetchOptimizationSuggestions(userId: string): Promise<OptimizationSuggestion[]> {
-  const res = await fetch(`${BASE_URL}/optimization/${userId}`);
+// previous: fetch(`${BASE_URL}/optimization/${userId}`) — returned OptimizationSuggestion[] directly
+export async function fetchOptimizationSuggestions(userId: number): Promise<OptimizationSuggestion[]> {
+  const res = await fetch(`${BASE_URL}/api/v1/graph/users/${userId}/optimization`);
   if (!res.ok) throw new Error('Failed to fetch optimization suggestions');
-  return res.json();
+  const data = await res.json();
+  return data.suggestions;
 }
 
 // -- Policy Compliance --
-
-export async function fetchPolicyCompliance(userId: string): Promise<PolicyCompliance> {
-  const res = await fetch(`${BASE_URL}/policy/${userId}`);
+// previous: fetch(`${BASE_URL}/policy/${userId}`)
+export async function fetchPolicyCompliance(userId: number): Promise<PolicyCompliance> {
+  const res = await fetch(`${BASE_URL}/api/v1/graph/users/${userId}/policy`);
   if (!res.ok) throw new Error('Failed to fetch policy compliance');
   return res.json();
 }
