@@ -5,6 +5,7 @@ import SpendingSummary from './pages/SpendingSummary';
 import Optimization from './pages/Optimization';
 import PolicyCompliance from './pages/PolicyCompliance';
 import Users from './pages/Users';
+import UserAnalysis from './pages/UserAnalysis';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="optimization" element={<Optimization />} />
           <Route path="policy" element={<PolicyCompliance />} />
           <Route path="users" element={<Users />} />
+          <Route path="analysis" element={<UserAnalysis />} />
         </Route>
       </Routes>
     </BrowserRouter>

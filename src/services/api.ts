@@ -3,6 +3,7 @@ import type {
   OptimizationSuggestion,
   PolicyCompliance,
   AgentPipelineStatus,
+  UserAnalysis,
 } from '../types';
 
 const BASE_URL = (import.meta.env.VITE_API_URL as string) ?? '';
@@ -55,6 +56,18 @@ export async function fetchOptimizationSuggestions(userId: number): Promise<Opti
 export async function fetchPolicyCompliance(userId: number): Promise<PolicyCompliance> {
   const res = await fetch(`${BASE_URL}/api/v1/graph/users/${userId}/policy`);
   if (!res.ok) throw new Error('Failed to fetch policy compliance');
+  return res.json();
+}
+
+// -- User Analysis --
+
+export async function fetchUserAnalysis(userId: number): Promise<UserAnalysis> {
+  const res = await fetch(`${BASE_URL}/api/v1/agent/analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId }),
+  });
+  if (!res.ok) throw new Error('Failed to fetch user analysis');
   return res.json();
 }
 

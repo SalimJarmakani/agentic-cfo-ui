@@ -1,0 +1,339 @@
+/* Dashboard layout — override .page max-width with higher specificity */
+.page.analysis-page {
+  max-width: 100%;
+}
+
+/* Header row with title + status badge */
+.analysis-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.analysis-header .page-title,
+.analysis-header .page-sub {
+  margin-bottom: 0;
+}
+
+.analysis-header .page-title {
+  margin-bottom: 4px;
+}
+
+.analysis-status-badge {
+  font-size: 12px;
+  padding: 5px 12px;
+  margin-top: 4px;
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+
+/* Two-column grid */
+.analysis-grid {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.analysis-grid--6040 {
+  grid-template-columns: 3fr 2fr;
+}
+
+.analysis-grid--5050 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Spending bar rows — stacked label layout */
+.analysis-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.analysis-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.analysis-bar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.analysis-bar-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 65%;
+}
+
+.analysis-bar-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.analysis-bar-amount {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.analysis-bar-pct {
+  font-size: 11px;
+  color: #94a3b8;
+  width: 34px;
+  text-align: right;
+}
+
+.analysis-bar-track {
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.analysis-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* AI insight panel */
+.analysis-insight {
+  border-left: 4px solid #3b82f6;
+  background: #fafcff;
+}
+
+/* Formatted markdown output */
+.analysis-formatted {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+}
+
+.analysis-section-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 20px 0 6px;
+}
+
+.analysis-section-heading:first-child {
+  margin-top: 0;
+}
+
+.analysis-para {
+  margin: 0 0 10px;
+  color: #374151;
+}
+
+.analysis-para:last-child {
+  margin-bottom: 0;
+}
+
+.analysis-bullets {
+  margin: 4px 0 12px 18px;
+  padding: 0;
+  list-style: disc;
+}
+
+.analysis-bullets li {
+  margin-bottom: 5px;
+  color: #475569;
+  padding-left: 2px;
+}
+
+/* Policy rules — compact inline rows (no nested cards) */
+.analysis-rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.analysis-rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.analysis-rule-row:last-child {
+  border-bottom: none;
+}
+
+.analysis-rule-icon {
+  font-size: 13px;
+  font-weight: 700;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.analysis-rule-icon--compliant { color: #22c55e; }
+.analysis-rule-icon--warning   { color: #eab308; }
+.analysis-rule-icon--violation { color: #ef4444; }
+
+.analysis-rule-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.analysis-rule-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.analysis-rule-detail {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Compact score bar inside card */
+.analysis-score-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.analysis-score-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.analysis-score-denom {
+  font-size: 16px;
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+.analysis-score-track {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.analysis-score-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Optimization items — inline list (no nested cards) */
+.analysis-opt-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-opt-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.analysis-opt-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.analysis-opt-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.analysis-opt-dot--high   { background: #ef4444; }
+.analysis-opt-dot--medium { background: #eab308; }
+.analysis-opt-dot--low    { background: #3b82f6; }
+
+.analysis-opt-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.analysis-opt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.analysis-opt-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.analysis-opt-savings {
+  font-size: 12px;
+  font-weight: 600;
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.analysis-opt-desc {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Scrollable category table */
+.table-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  border-radius: 6px;
+}
+
+/* Compact transaction table badge */
+.txn-credit {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.txn-debit {
+  color: #0f172a;
+}
+
+/* Section title with inline count/meta */
+.section-title-meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+  .analysis-grid--6040,
+  .analysis-grid--5050 {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

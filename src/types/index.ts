@@ -44,3 +44,39 @@ export interface AgentPipelineStatus {
   policyAgent: 'idle' | 'running' | 'done' | 'error';
   explanationAgent: 'idle' | 'running' | 'done' | 'error';
 }
+
+export interface UserSpendingSummary {
+  user_id: number;
+  txn_count: number;
+  total_spend: number;
+  avg_ticket: number;
+  first_txn_ts: string;
+  last_txn_ts: string;
+}
+
+export interface RecentTransaction {
+  txn_id: number;
+  user_id: number;
+  card_id: number;
+  merchant_id: number;
+  txn_ts: string;
+  amount: string | number; // Postgres Decimal serializes as string in Dict[str, Any]
+  mcc: number;
+}
+
+export interface UserAnalysis {
+  user_id: number;
+  input_tokens: number;
+  analysis: string;
+  supporting_data: {
+    user_spending_summary: UserSpendingSummary;
+    user_spending_graph: SpendingSummary;
+    optimization: {
+      user_id: number;
+      suggestions: OptimizationSuggestion[];
+      total_estimated_savings: number;
+    };
+    policy: PolicyCompliance;
+    recent_transactions: RecentTransaction[];
+  };
+}

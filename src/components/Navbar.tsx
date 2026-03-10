@@ -7,6 +7,7 @@ const nav = [
   { to: '/optimization', label: 'Optimization' },
   { to: '/policy', label: 'Policy' },
   { to: '/users', label: 'Users' },
+  { to: '/analysis', label: 'Analysis' },
 ];
 
 export default function Navbar() {

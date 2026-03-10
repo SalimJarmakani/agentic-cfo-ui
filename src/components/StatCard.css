@@ -23,10 +23,12 @@
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: clamp(18px, 2vw, 26px);
   font-weight: 700;
   color: #0f172a;
-  line-height: 1;
+  line-height: 1.1;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .stat-sub {
