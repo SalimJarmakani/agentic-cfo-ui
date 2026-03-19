@@ -4,6 +4,8 @@ import type {
   PolicyCompliance,
   AgentPipelineStatus,
   UserAnalysis,
+  AgentWorkflow,
+  AgentWorkflowListResponse,
 } from '../types';
 
 const BASE_URL = (import.meta.env.VITE_API_URL as string) ?? '';
@@ -68,6 +70,38 @@ export async function fetchUserAnalysis(userId: number): Promise<UserAnalysis> {
     body: JSON.stringify({ user_id: userId }),
   });
   if (!res.ok) throw new Error('Failed to fetch user analysis');
+  return res.json();
+}
+
+// -- Agent Workflows --
+
+export async function fetchUserWorkflows(userId: number, limit = 20): Promise<AgentWorkflowListResponse> {
+  const res = await fetch(`${BASE_URL}/api/v1/agent/workflows?user_id=${userId}&limit=${limit}`);
+  if (!res.ok) throw new Error(`Failed to fetch workflows (${res.status})`);
+  return res.json();
+}
+
+export async function fetchAgentWorkflow(workflowRunId: number): Promise<AgentWorkflow> {
+  const res = await fetch(`${BASE_URL}/api/v1/agent/workflows/${workflowRunId}`);
+  if (!res.ok) throw new Error(`Failed to fetch workflow (${res.status})`);
+  return res.json();
+}
+
+export async function startAgentWorkflow(userId: number, question: string): Promise<AgentWorkflow> {
+  const res = await fetch(`${BASE_URL}/api/v1/agent/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, question }),
+  });
+  if (!res.ok) throw new Error(`Failed to start workflow (${res.status})`);
+  return res.json();
+}
+
+export async function continueAgentWorkflow(workflowRunId: number): Promise<AgentWorkflow> {
+  const res = await fetch(`${BASE_URL}/api/v1/agent/workflows/${workflowRunId}/continue`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`Failed to continue workflow (${res.status})`);
   return res.json();
 }
 

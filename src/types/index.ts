@@ -80,3 +80,48 @@ export interface UserAnalysis {
     recent_transactions: RecentTransaction[];
   };
 }
+
+export type WorkflowStepName = 'analysis' | 'planning' | 'policy';
+export type WorkflowStepStatus = 'pending' | 'running' | 'completed' | 'failed';
+export type WorkflowStatus = 'running' | 'waiting_for_user' | 'completed' | 'failed';
+export type WorkflowStage = 'analysis' | 'planning' | 'policy' | 'done' | 'failed';
+
+export interface WorkflowStep {
+  workflow_step_id: number;
+  workflow_run_id: number;
+  step_name: WorkflowStepName;
+  status: WorkflowStepStatus;
+  input_payload?: Record<string, unknown> | null;
+  output_payload?: Record<string, unknown> | null;
+  error_message?: string | null;
+  started_at?: string | null;
+  completed_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface AgentWorkflowSummary {
+  workflow_run_id: number;
+  user_id: number;
+  question: string;
+  status: WorkflowStatus;
+  current_stage: WorkflowStage;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AgentWorkflow {
+  workflow_run_id: number;
+  user_id: number;
+  question: string;
+  status: WorkflowStatus;
+  current_stage: WorkflowStage;
+  created_at: string;
+  updated_at: string;
+  steps: WorkflowStep[];
+}
+
+export interface AgentWorkflowListResponse {
+  user_id: number;
+  items: AgentWorkflowSummary[];
+}
