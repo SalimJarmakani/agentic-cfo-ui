@@ -8,10 +8,18 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  SidebarSeparator,
   SidebarTrigger,
   useSidebar,
-} from '../ui/Sidebar';
+} from '../ui/sidebar';
+import { HistoryIcon, PlayIcon, UsersIcon } from 'lucide-react';
 
 type SidebarTab = 'users' | 'start' | 'runs';
 
@@ -38,10 +46,14 @@ type Props = {
   onContinueWorkflow: (workflowRunId: number) => void;
 };
 
-const tabs: Array<{ id: SidebarTab; label: string; shortLabel: string }> = [
-  { id: 'users', label: 'Users', shortLabel: 'U' },
-  { id: 'start', label: 'Start', shortLabel: 'S' },
-  { id: 'runs', label: 'History', shortLabel: 'H' },
+const tabs: Array<{
+  id: SidebarTab;
+  label: string;
+  icon: typeof UsersIcon;
+}> = [
+  { id: 'users', label: 'Users', icon: UsersIcon },
+  { id: 'start', label: 'Start', icon: PlayIcon },
+  { id: 'runs', label: 'History', icon: HistoryIcon },
 ];
 
 export default function WorkflowSidebar({
@@ -67,10 +79,10 @@ export default function WorkflowSidebar({
   onContinueWorkflow,
 }: Props) {
   const [activeTab, setActiveTab] = useState<SidebarTab>('users');
-  const { open } = useSidebar();
+  const { open, setOpen } = useSidebar();
 
   return (
-    <Sidebar className="workflow-sidebar-shell">
+    <Sidebar collapsible="icon" variant="floating" className="workflow-sidebar-shell">
       <SidebarHeader className="workflow-sidebar-head">
         <div className="workflow-sidebar-title-wrap">
           <span className="workflow-sidebar-eyebrow">Workspace</span>
@@ -84,31 +96,45 @@ export default function WorkflowSidebar({
         <SidebarTrigger
           className="workflow-sidebar-toggle"
           aria-label={open ? 'Collapse workflow sidebar' : 'Expand workflow sidebar'}
-        >
-          {open ? '<' : '>'}
-        </SidebarTrigger>
+        />
       </SidebarHeader>
 
-      <SidebarContent>
-        <div className="workflow-sidebar-tabs" role="tablist" aria-label="Workflow sidebar tabs">
-          {open && <span className="workflow-sidebar-group-label">Browse</span>}
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={`workflow-sidebar-tab${activeTab === tab.id ? ' workflow-sidebar-tab--active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-              role="tab"
-              aria-selected={activeTab === tab.id}
-            >
-              <span className="workflow-sidebar-tab-short">{tab.shortLabel}</span>
-              {open && <span>{tab.label}</span>}
-            </button>
-          ))}
-        </div>
+      <SidebarContent className="workflow-sidebar-content">
+        <SidebarGroup className="workflow-sidebar-tabs">
+          <SidebarGroupLabel className="workflow-sidebar-group-label">Browse</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu role="tablist" aria-label="Workflow sidebar tabs">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const active = activeTab === tab.id;
+
+                return (
+                  <SidebarMenuItem key={tab.id}>
+                    <SidebarMenuButton
+                      isActive={active}
+                      tooltip={tab.label}
+                      className="workflow-sidebar-menu-button"
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        if (!open) setOpen(true);
+                      }}
+                      role="tab"
+                      aria-selected={active}
+                    >
+                      <Icon />
+                      <span>{tab.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         {open && (
-          <SidebarGroup className="workflow-sidebar-body">
+          <>
+            <SidebarSeparator />
+            <SidebarGroup className="workflow-sidebar-body">
             <div className="workflow-sidebar-panel">
               {activeTab === 'users' && (
                 <WorkflowUserPicker
@@ -148,9 +174,11 @@ export default function WorkflowSidebar({
                 </>
               )}
             </div>
-          </SidebarGroup>
+            </SidebarGroup>
+          </>
         )}
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import WorkflowDetailCard from '../components/dashboard/WorkflowDetailCard';
 import WorkflowOutputs from '../components/dashboard/WorkflowOutputs';
 import WorkflowPipeline from '../components/dashboard/WorkflowPipeline';
 import WorkflowSidebar from '../components/dashboard/WorkflowSidebar';
 import '../components/dashboard/DashboardWorkflow.css';
-import { SidebarInset, SidebarProvider } from '../components/ui/Sidebar';
+import { SidebarInset, SidebarProvider } from '../components/ui/sidebar';
 import './Page.css';
 import {
   continueAgentWorkflow,
@@ -28,6 +28,11 @@ const WORKFLOW_STEP_ORDER: Record<WorkflowStepName, number> = {
   planning: 1,
   policy: 2,
 };
+
+const workflowSidebarStyle = {
+  '--sidebar-width': '21rem',
+  '--sidebar-width-icon': '4.5rem',
+} as CSSProperties;
 
 function isWorkflowStatus(value: string): value is WorkflowStatus {
   return value === 'running' || value === 'waiting_for_user' || value === 'completed' || value === 'failed';
@@ -252,7 +257,7 @@ export default function Dashboard() {
 
       {actionError && <p className="workflow-error" style={{ marginBottom: '16px' }}>{actionError}</p>}
 
-      <SidebarProvider className="workflow-layout">
+      <SidebarProvider className="workflow-layout" style={workflowSidebarStyle}>
         <WorkflowSidebar
           usersData={usersData}
           usersLoading={usersLoading}

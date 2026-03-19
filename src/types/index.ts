@@ -86,6 +86,9 @@ export type WorkflowStepStatus = 'pending' | 'running' | 'completed' | 'failed';
 export type WorkflowStatus = 'running' | 'waiting_for_user' | 'completed' | 'failed';
 export type WorkflowStage = 'analysis' | 'planning' | 'policy' | 'done' | 'failed';
 
+const user: UserAnalysis = {};
+
+user.//#endregion
 export interface WorkflowStep {
   workflow_step_id: number;
   workflow_run_id: number;

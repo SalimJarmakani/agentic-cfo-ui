@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.workflow-layout [data-slot='sidebar-gap'] {
+  width: calc(var(--sidebar-width-icon) + 1rem) !important;
+}
+
 .workflow-sidebar-shell {
   overflow: visible;
   z-index: 1;
@@ -16,6 +20,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  padding: 16px 18px 12px;
 }
 
 .workflow-sidebar-title-wrap {
@@ -56,18 +61,21 @@
   flex-shrink: 0;
 }
 
+.workflow-sidebar-content {
+  padding-bottom: 14px;
+}
+
 .workflow-sidebar-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 12px 16px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 10px 0;
   border-bottom: 1px solid #eef2f7;
   background: #fcfcfd;
-  align-items: center;
 }
 
 .workflow-sidebar-group-label {
-  padding: 0 10px 0 4px;
+  padding: 0 6px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -75,57 +83,25 @@
   color: #94a3b8;
 }
 
-.workflow-sidebar-tab {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
+.workflow-sidebar-menu-button {
   border: 1px solid transparent;
-  background: transparent;
   color: #475569;
-  border-radius: 10px;
-  padding: 9px 10px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  min-height: 40px;
 }
 
-.workflow-sidebar-tab:hover {
-  background: #f8fafc;
+.workflow-sidebar-menu-button:hover {
   border-color: #eef2f7;
   color: #0f172a;
 }
 
-.workflow-sidebar-tab--active {
+.workflow-sidebar-menu-button[data-active='true'] {
   border-color: #dbeafe;
   background: #eff6ff;
   color: #1e40af;
 }
 
-.workflow-sidebar-tab-short {
-  display: inline-flex;
-  width: 22px;
-  height: 22px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: #f1f5f9;
-  color: #475569;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.workflow-sidebar-tab--active .workflow-sidebar-tab-short {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.ui-sidebar-group.workflow-sidebar-body {
-  padding: 0;
+.workflow-sidebar-body {
+  padding: 12px 14px 0;
   background: #fcfcfd;
 }
 
@@ -721,13 +697,11 @@
   }
 
   .workflow-sidebar-tabs {
-    flex-direction: column;
-    align-items: stretch;
     gap: 8px;
   }
 
   .workflow-sidebar-group-label {
-    padding: 2px 10px 0;
+    padding: 0 6px;
   }
 
   .workflow-summary-strip {
