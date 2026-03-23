@@ -13,6 +13,7 @@ export const workflowStageLabel: Record<WorkflowStage, string> = {
   analysis: 'Analysis',
   planning: 'Planning',
   policy: 'Policy',
+  explanation: 'Explanation',
   done: 'Done',
   failed: 'Failed',
 };
@@ -21,6 +22,7 @@ export const workflowStepTitle: Record<WorkflowStep['step_name'], string> = {
   analysis: 'Analysis Agent',
   planning: 'Planning Agent',
   policy: 'Policy Agent',
+  explanation: 'Explanation Agent',
 };
 
 export const workflowStepStatusLabel: Record<WorkflowStepStatus, string> = {
@@ -47,8 +49,17 @@ export function canContinueWorkflow(workflow: Pick<AgentWorkflowSummary, 'status
   return workflow.status === 'waiting_for_user';
 }
 
+export function canRerunWorkflow(workflow: Pick<AgentWorkflowSummary, 'status'>): boolean {
+  return workflow.status === 'failed';
+}
+
 export function getPreferredWorkflowId(workflows: AgentWorkflowSummary[]): number | null {
-  return workflows.find(canContinueWorkflow)?.workflow_run_id ?? workflows[0]?.workflow_run_id ?? null;
+  return (
+    workflows.find(canContinueWorkflow)?.workflow_run_id ??
+    workflows.find(canRerunWorkflow)?.workflow_run_id ??
+    workflows[0]?.workflow_run_id ??
+    null
+  );
 }
 
 export function formatCurrency(value: number | null | undefined): string {

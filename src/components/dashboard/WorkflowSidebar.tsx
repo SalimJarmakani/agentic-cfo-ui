@@ -19,7 +19,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '../ui/sidebar';
-import { HistoryIcon, PlayIcon, UsersIcon } from 'lucide-react';
+import { HistoryIcon, PlayIcon, ShieldCheckIcon, UsersIcon } from 'lucide-react';
 
 type SidebarTab = 'users' | 'start' | 'runs';
 
@@ -44,6 +44,7 @@ type Props = {
   onStartWorkflow: () => void;
   onSelectWorkflow: (workflowRunId: number) => void;
   onContinueWorkflow: (workflowRunId: number) => void;
+  onOpenPolicies: () => void;
 };
 
 const tabs: Array<{
@@ -77,6 +78,7 @@ export default function WorkflowSidebar({
   onStartWorkflow,
   onSelectWorkflow,
   onContinueWorkflow,
+  onOpenPolicies,
 }: Props) {
   const [activeTab, setActiveTab] = useState<SidebarTab>('users');
   const { open, setOpen } = useSidebar();
@@ -128,6 +130,15 @@ export default function WorkflowSidebar({
                 );
               })}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup className="workflow-sidebar-actions">
+          <SidebarGroupContent>
+            <button type="button" className="workflow-sidebar-action" onClick={onOpenPolicies}>
+              <ShieldCheckIcon size={16} />
+              {open && <span>User Policies</span>}
+            </button>
           </SidebarGroupContent>
         </SidebarGroup>
 

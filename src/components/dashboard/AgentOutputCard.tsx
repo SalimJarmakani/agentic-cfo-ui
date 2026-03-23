@@ -244,6 +244,57 @@ function PolicyOutput({ payload }: { payload: Record<string, unknown> }) {
   );
 }
 
+function ExplanationOutput({ payload }: { payload: Record<string, unknown> }) {
+  const headline = getString(payload.headline);
+  const summary = getString(payload.summary);
+  const keyPoints = getStringList(payload.key_points);
+  const recommendedNextSteps = getStringList(payload.recommended_next_steps);
+  const policyNote = getString(payload.policy_note);
+
+  return (
+    <div className="agent-output-body">
+      {headline && (
+        <div className="agent-output-section">
+          <h4 className="agent-output-heading">Headline</h4>
+          <p className="agent-output-copy">{headline}</p>
+        </div>
+      )}
+
+      {summary && (
+        <div className="agent-output-section">
+          <h4 className="agent-output-heading">Summary</h4>
+          <p className="agent-output-copy">{summary}</p>
+        </div>
+      )}
+
+      {keyPoints.length > 0 && (
+        <div className="agent-output-section">
+          <h4 className="agent-output-heading">Key Points</h4>
+          <ul className="agent-output-list">
+            {keyPoints.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {recommendedNextSteps.length > 0 && (
+        <div className="agent-output-section">
+          <h4 className="agent-output-heading">Recommended Next Steps</h4>
+          <ul className="agent-output-list">
+            {recommendedNextSteps.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {policyNote && (
+        <div className="agent-output-section">
+          <h4 className="agent-output-heading">Policy Note</h4>
+          <p className="agent-output-copy">{policyNote}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PendingOutput({ step }: { step: WorkflowStep }) {
   if (step.status === 'failed') {
     return <p className="workflow-error">{step.error_message || 'This step failed before producing output.'}</p>;
@@ -267,9 +318,10 @@ export default function AgentOutputCard({ step }: Props) {
   return (
     <article className="card workflow-card agent-output-card">
       <div className="workflow-card-head">
-        <div>
-          <h3 className="section-title">{workflowStepTitle[step.step_name]}</h3>
-          <p className="workflow-muted">Agent output for the {step.step_name} stage.</p>
+        <div className="agent-output-header-copy">
+          <span className="agent-output-stage-label">{step.step_name}</span>
+          <h3 className="agent-output-title">{workflowStepTitle[step.step_name]}</h3>
+          <p className="agent-output-subtitle">Output captured for the {step.step_name} stage.</p>
         </div>
         <div className="agent-output-meta">
           <span className={`workflow-status-pill workflow-status-pill--${step.status === 'completed' ? 'completed' : step.status === 'failed' ? 'failed' : step.status === 'running' ? 'running' : 'idle'}`}>
@@ -285,8 +337,10 @@ export default function AgentOutputCard({ step }: Props) {
         <AnalysisOutput payload={payload} />
       ) : step.step_name === 'planning' ? (
         <PlanningOutput payload={payload} />
-      ) : (
+      ) : step.step_name === 'policy' ? (
         <PolicyOutput payload={payload} />
+      ) : (
+        <ExplanationOutput payload={payload} />
       )}
     </article>
   );

@@ -14,6 +14,19 @@ export interface SpendingSummary {
   subscriptions: number;
 }
 
+export interface UserSpendingOverview {
+  user_id: number;
+  txn_count: number;
+  total_spend: number;
+  avg_ticket: number;
+  first_txn_ts: string | null;
+  last_txn_ts: string | null;
+}
+
+export interface UsersSpendingOverviewResponse {
+  items: UserSpendingOverview[];
+}
+
 export interface OptimizationSuggestion {
   id: string;
   title: string;
@@ -50,8 +63,8 @@ export interface UserSpendingSummary {
   txn_count: number;
   total_spend: number;
   avg_ticket: number;
-  first_txn_ts: string;
-  last_txn_ts: string;
+  first_txn_ts: string | null;
+  last_txn_ts: string | null;
 }
 
 export interface RecentTransaction {
@@ -81,14 +94,10 @@ export interface UserAnalysis {
   };
 }
 
-export type WorkflowStepName = 'analysis' | 'planning' | 'policy';
+export type WorkflowStepName = 'analysis' | 'planning' | 'policy' | 'explanation';
 export type WorkflowStepStatus = 'pending' | 'running' | 'completed' | 'failed';
 export type WorkflowStatus = 'running' | 'waiting_for_user' | 'completed' | 'failed';
-export type WorkflowStage = 'analysis' | 'planning' | 'policy' | 'done' | 'failed';
-
-const user: UserAnalysis = {};
-
-user.//#endregion
+export type WorkflowStage = 'analysis' | 'planning' | 'policy' | 'explanation' | 'done' | 'failed';
 export interface WorkflowStep {
   workflow_step_id: number;
   workflow_run_id: number;
@@ -127,4 +136,73 @@ export interface AgentWorkflow {
 export interface AgentWorkflowListResponse {
   user_id: number;
   items: AgentWorkflowSummary[];
+}
+
+export interface MetricsSummary {
+  analytics_accuracy_rate: number | null;
+  analytics_accuracy_total_evaluations: number;
+  workflow_completion_rate: number | null;
+  workflow_total_runs: number;
+  workflow_completed_runs: number;
+  workflow_failed_runs: number;
+  workflow_in_progress_runs: number;
+  policy_intervention_rate: number | null;
+  policy_intervention_total_reviews: number;
+  policy_intervention_count: number;
+  policy_compliance_rate: number | null;
+  policy_compliance_total_reviews: number;
+  policy_compliant_count: number;
+  average_api_response_time_ms: number | null;
+  average_workflow_completion_time_ms: number | null;
+  average_stage_response_time_ms: Record<string, number>;
+  human_recommendation_usefulness_avg: number | null;
+  human_recommendation_usefulness_total_reviews: number;
+}
+
+export interface AgentTokenUsage {
+  average_input_tokens_by_agent: Record<string, number | null>;
+  runs_with_input_tokens_by_agent: Record<string, number>;
+}
+
+export interface ValidatedQueryEvaluationRequest {
+  question: string;
+  expected_answer: string;
+  actual_answer?: string;
+  top_k?: number;
+  is_correct?: boolean | null;
+  evaluator?: string;
+  notes?: string;
+}
+
+export interface ValidatedQueryEvaluationResponse {
+  evaluation_id: number;
+  question: string;
+  expected_answer: string;
+  actual_answer: string;
+  is_correct: boolean | null;
+  evaluator?: string | null;
+  notes?: string | null;
+  created_at: string;
+}
+
+export interface RecommendationFeedbackRequest {
+  workflow_run_id: number;
+  recommendation_stage: 'analysis' | 'planning' | 'policy' | 'explanation';
+  usefulness_rating: number;
+  clarity_rating?: number | null;
+  adopted?: boolean | null;
+  evaluator?: string;
+  comments?: string;
+}
+
+export interface RecommendationFeedbackResponse {
+  feedback_id: number;
+  workflow_run_id: number;
+  recommendation_stage: 'analysis' | 'planning' | 'policy' | 'explanation';
+  usefulness_rating: number;
+  clarity_rating?: number | null;
+  adopted?: boolean | null;
+  evaluator?: string | null;
+  comments?: string | null;
+  created_at: string;
 }

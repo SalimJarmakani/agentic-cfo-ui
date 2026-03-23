@@ -1,5 +1,5 @@
 import type { AgentWorkflowSummary } from '../../types';
-import { canContinueWorkflow, formatWorkflowDate, workflowStageLabel, workflowStatusLabel } from './workflowFormat';
+import { canContinueWorkflow, canRerunWorkflow, formatWorkflowDate, workflowStageLabel, workflowStatusLabel } from './workflowFormat';
 
 type Props = {
   workflows: AgentWorkflowSummary[];
@@ -23,7 +23,9 @@ function WorkflowRunRow({
   onSelectWorkflow: (workflowRunId: number) => void;
   onContinueWorkflow: (workflowRunId: number) => void;
 }) {
-  const resumable = canContinueWorkflow(workflow);
+  const resumable = canContinueWorkflow(workflow) || canRerunWorkflow(workflow);
+  const actionLabel = canRerunWorkflow(workflow) ? 'Rerun' : 'Continue';
+  const pendingLabel = canRerunWorkflow(workflow) ? 'Rerunning...' : 'Continuing...';
 
   return (
     <div className={`workflow-run-item${isSelected ? ' workflow-run-item--active' : ''}`}>
@@ -47,7 +49,7 @@ function WorkflowRunRow({
           onClick={() => onContinueWorkflow(workflow.workflow_run_id)}
           disabled={isContinuing}
         >
-          {isContinuing ? 'Continuing...' : 'Continue'}
+          {isContinuing ? pendingLabel : actionLabel}
         </button>
       )}
     </div>
@@ -62,15 +64,15 @@ export default function WorkflowRunList({
   onSelectWorkflow,
   onContinueWorkflow,
 }: Props) {
-  const resumable = workflows.filter(canContinueWorkflow);
-  const history = workflows.filter((workflow) => !canContinueWorkflow(workflow));
+  const resumable = workflows.filter((workflow) => canContinueWorkflow(workflow) || canRerunWorkflow(workflow));
+  const history = workflows.filter((workflow) => !canContinueWorkflow(workflow) && !canRerunWorkflow(workflow));
 
   return (
     <section className="card workflow-card">
       <div className="workflow-card-head">
         <div>
           <h2 className="section-title">Workflow Runs</h2>
-          <p className="workflow-muted">Continue an in-progress run or open a finished workflow.</p>
+          <p className="workflow-muted">Continue waiting runs, rerun failed runs, or open finished workflows.</p>
         </div>
       </div>
 
@@ -81,9 +83,9 @@ export default function WorkflowRunList({
       ) : (
         <div className="workflow-run-groups">
           <div className="workflow-run-group">
-            <h3 className="workflow-subtitle">Ready to Continue</h3>
+            <h3 className="workflow-subtitle">Ready to Continue or Rerun</h3>
             {resumable.length === 0 ? (
-              <p className="workflow-muted">No resumable runs.</p>
+              <p className="workflow-muted">No resumable or rerunnable runs.</p>
             ) : (
               resumable.map((workflow) => (
                 <WorkflowRunRow

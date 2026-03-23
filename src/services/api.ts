@@ -1,11 +1,18 @@
 import type {
   SpendingSummary,
+  UsersSpendingOverviewResponse,
   OptimizationSuggestion,
   PolicyCompliance,
   AgentPipelineStatus,
   UserAnalysis,
   AgentWorkflow,
   AgentWorkflowListResponse,
+  AgentTokenUsage,
+  MetricsSummary,
+  ValidatedQueryEvaluationRequest,
+  ValidatedQueryEvaluationResponse,
+  RecommendationFeedbackRequest,
+  RecommendationFeedbackResponse,
 } from '../types';
 
 const BASE_URL = (import.meta.env.VITE_API_URL as string) ?? '';
@@ -41,6 +48,25 @@ export async function fetchUsers(page = 1, pageSize = 25): Promise<PaginatedUser
 export async function fetchSpendingSummary(userId: number): Promise<SpendingSummary> {
   const res = await fetch(`${BASE_URL}/api/v1/graph/users/${userId}/spending`);
   if (!res.ok) throw new Error('Failed to fetch spending summary');
+  return res.json();
+}
+
+export async function fetchUserSpendingSummary(userId: number): Promise<{
+  user_id: number;
+  txn_count: number;
+  total_spend: number;
+  avg_ticket: number;
+  first_txn_ts: string | null;
+  last_txn_ts: string | null;
+}> {
+  const res = await fetch(`${BASE_URL}/api/v1/analytics/users/${userId}/spending`);
+  if (!res.ok) throw new Error('Failed to fetch user spending summary');
+  return res.json();
+}
+
+export async function fetchUsersSpendingOverview(): Promise<UsersSpendingOverviewResponse> {
+  const res = await fetch(`${BASE_URL}/api/v1/analytics/users/spending-overview`);
+  if (!res.ok) throw new Error('Failed to fetch users spending overview');
   return res.json();
 }
 
@@ -102,6 +128,44 @@ export async function continueAgentWorkflow(workflowRunId: number): Promise<Agen
     method: 'POST',
   });
   if (!res.ok) throw new Error(`Failed to continue workflow (${res.status})`);
+  return res.json();
+}
+
+// -- Metrics --
+
+export async function fetchMetricsSummary(): Promise<MetricsSummary> {
+  const res = await fetch(`${BASE_URL}/api/v1/metrics/summary`);
+  if (!res.ok) throw new Error(`Failed to fetch metrics summary (${res.status})`);
+  return res.json();
+}
+
+export async function fetchAgentTokenUsage(): Promise<AgentTokenUsage> {
+  const res = await fetch(`${BASE_URL}/api/v1/metrics/agent-token-usage`);
+  if (!res.ok) throw new Error(`Failed to fetch agent token usage (${res.status})`);
+  return res.json();
+}
+
+export async function createValidatedQueryEvaluation(
+  payload: ValidatedQueryEvaluationRequest,
+): Promise<ValidatedQueryEvaluationResponse> {
+  const res = await fetch(`${BASE_URL}/api/v1/metrics/validated-queries/evaluations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Failed to save validated query evaluation (${res.status})`);
+  return res.json();
+}
+
+export async function createRecommendationFeedback(
+  payload: RecommendationFeedbackRequest,
+): Promise<RecommendationFeedbackResponse> {
+  const res = await fetch(`${BASE_URL}/api/v1/metrics/recommendation-feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Failed to save recommendation feedback (${res.status})`);
   return res.json();
 }
 

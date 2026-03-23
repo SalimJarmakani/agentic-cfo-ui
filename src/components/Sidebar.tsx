@@ -2,10 +2,11 @@ import { NavLink } from 'react-router';
 import './Sidebar.css';
 
 const nav = [
-  { to: '/', label: 'Overview', icon: '▦' },
-  { to: '/spending', label: 'Spending', icon: '◈' },
-  { to: '/optimization', label: 'Optimization', icon: '◎' },
-  { to: '/policy', label: 'Policy', icon: '◉' },
+  { to: '/', label: 'Overview', icon: 'O' },
+  { to: '/spending', label: 'Spending', icon: 'S' },
+  { to: '/optimization', label: 'Optimization', icon: 'P' },
+  { to: '/policy', label: 'Policy', icon: 'C' },
+  { to: '/metrics', label: 'Metrics', icon: 'M' },
 ];
 
 export default function Sidebar() {

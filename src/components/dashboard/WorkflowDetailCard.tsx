@@ -1,5 +1,5 @@
 import type { AgentWorkflow } from '../../types';
-import { canContinueWorkflow, formatWorkflowDate, workflowStageLabel, workflowStatusLabel } from './workflowFormat';
+import { canContinueWorkflow, canRerunWorkflow, formatWorkflowDate, workflowStageLabel, workflowStatusLabel } from './workflowFormat';
 
 type Props = {
   workflow: AgentWorkflow | null;
@@ -16,6 +16,10 @@ export default function WorkflowDetailCard({
   continuingWorkflowId,
   onContinueWorkflow,
 }: Props) {
+  const resumable = workflow ? canContinueWorkflow(workflow) || canRerunWorkflow(workflow) : false;
+  const actionLabel = workflow && canRerunWorkflow(workflow) ? 'Rerun from last success' : 'Continue run';
+  const pendingLabel = workflow && canRerunWorkflow(workflow) ? 'Rerunning...' : 'Continuing...';
+
   return (
     <section className="card workflow-card workflow-detail-shell">
       <div className="workflow-detail-hero workflow-detail-hero--compact">
@@ -23,14 +27,14 @@ export default function WorkflowDetailCard({
           <h2 className="section-title">Workflow Workspace</h2>
           <p className="workflow-muted">Compact run metadata, with the pipeline and outputs below.</p>
         </div>
-        {workflow && canContinueWorkflow(workflow) && (
+        {workflow && resumable && (
           <button
             type="button"
             className="workflow-primary-btn"
             disabled={continuingWorkflowId === workflow.workflow_run_id}
             onClick={() => onContinueWorkflow(workflow.workflow_run_id)}
           >
-            {continuingWorkflowId === workflow.workflow_run_id ? 'Continuing...' : 'Continue run'}
+            {continuingWorkflowId === workflow.workflow_run_id ? pendingLabel : actionLabel}
           </button>
         )}
       </div>

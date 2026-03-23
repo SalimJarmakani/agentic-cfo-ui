@@ -8,6 +8,7 @@ type Props = {
 
 export default function WorkflowOutputs({ workflow }: Props) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const outputCount = workflow?.steps.length ?? 0;
 
   function scrollOutputs(direction: 'left' | 'right') {
     const container = scrollRef.current;
@@ -21,21 +22,25 @@ export default function WorkflowOutputs({ workflow }: Props) {
   }
 
   return (
-    <section className="section">
+    <section className="section workflow-output-section">
       <div className="workflow-card-head workflow-card-head--section">
-        <div>
-          <h2 className="section-title">Agent Outputs</h2>
-          <p className="workflow-muted">Scroll sideways to compare each agent card in one row.</p>
+        <div className="workflow-output-header-copy">
+          <span className="workflow-output-eyebrow">Workflow Review</span>
+          <div className="workflow-output-title-row">
+            <h2 className="workflow-output-title">Agent Outputs</h2>
+            {workflow && <span className="workflow-output-count">{outputCount} stages</span>}
+          </div>
+          <p className="workflow-output-subtitle">Scroll sideways to compare each agent card without leaving the dashboard.</p>
         </div>
         {!!workflow && (
-          <div className="workflow-output-controls">
+          <div className="workflow-output-controls" aria-label="Agent output navigation">
             <button
               type="button"
               className="workflow-output-scroll-btn"
               onClick={() => scrollOutputs('left')}
               aria-label="Scroll agent outputs left"
             >
-              Prev
+              Previous
             </button>
             <button
               type="button"
